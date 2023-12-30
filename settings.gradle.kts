@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "StarMaker"
 include(":app")
- 
+include(":StarMakerFramework")
