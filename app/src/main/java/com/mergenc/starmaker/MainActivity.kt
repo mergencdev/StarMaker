@@ -3,6 +3,8 @@ package com.mergenc.starmaker
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.mergenc.starmaker.application.Constants.IMAGE_URL
 import com.mergenc.starmaker.databinding.ActivityMainBinding
 import com.mergenc.starmakerframework.StarMakerFramework
 import com.mergenc.starmakerframework.data.misc.Size
@@ -21,17 +23,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.mcvSmallStar.setOnClickListener {
             // Call the method to add a small star from your framework
-            starMakerFramework.createStar(Size.S)
+            starMakerFramework.addStarInterface(Size.S)
         }
 
         binding.mcvBigStar.setOnClickListener {
             // Call the method to add a big star from your framework
-            starMakerFramework.createStar(Size.B)
+            starMakerFramework.addStarInterface(Size.B)
         }
 
         binding.mcvReset.setOnClickListener {
             // Call the method to reset the stars from your framework
-            starMakerFramework.resetStars()
+            StarMakerFramework.triggerReset(this)
         }
     }
 }
