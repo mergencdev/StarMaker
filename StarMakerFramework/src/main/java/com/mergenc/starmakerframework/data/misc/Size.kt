@@ -5,6 +5,6 @@ package com.mergenc.starmakerframework.data.misc
  */
 
 enum class Size {
-    SMALL,
-    BIG
+    S,
+    B
 }

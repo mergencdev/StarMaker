@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">StarMaker</string>
+
+    <string name="small_star">🌟\nSmall Star</string>
+    <string name="big_star">⭐\nBig\nStar</string>
+    <string name="reset">🔄\nReset</string>
 </resources>
