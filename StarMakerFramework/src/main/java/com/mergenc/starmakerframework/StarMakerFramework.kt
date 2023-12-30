@@ -11,16 +11,14 @@ import com.mergenc.starmakerframework.data.misc.Color
 import com.mergenc.starmakerframework.data.misc.Size
 import com.mergenc.starmakerframework.data.model.StarModel
 
+
 /**
  * Created by Mehmet Emin Ergenc on 12/30/2023
  */
 
 class StarMakerFramework(context: Context) {
     private val context: Context = context
-    private val starsList by lazy {
-        // Lazily load the stars list when it is first accessed
-        getStarsList(context).toMutableList()
-    }
+    private var starsList: MutableList<StarModel> = mutableListOf()
 
     companion object {
         fun triggerReset(context: Context) {
@@ -28,14 +26,16 @@ class StarMakerFramework(context: Context) {
         }
     }
 
-    // Single-interface
+    // Single-interface method for adding a star; this method is called from the app
     fun addStarInterface(size: Size) {
+        starsList = getStarsList(context).toMutableList()
+
         if (starsList.size < 10) {
-            val star = if (size == Size.S) {
-                createSmallStar()
-            } else {
-                createBigStar()
+            val star = when (size) {
+                Size.S -> createSmallStar()
+                Size.B -> createBigStar()
             }
+
             starsList.add(star)
             saveStarsList(context, starsList)
             printAllList()
@@ -61,12 +61,18 @@ class StarMakerFramework(context: Context) {
         )
     }
 
+    /*
+     * Method for resetting the stars; this method is triggered from the function called triggerReset() in the companion object;
+     * And triggerReset() function called from the app;
+     */
     private fun resetStars() {
         clearSharedPreferences(context)
         starsList.clear()
+        saveStarsList(context, starsList)
         println("Sky is empty")
     }
 
+    // Method for printing all the stars in the list
     private fun printAllList() {
         starsList.forEachIndexed { index, star ->
             println("${index + 1}. Size: ${star.size}, Color: ${star.color}, Brightness: ${star.brightness}")
@@ -74,6 +80,10 @@ class StarMakerFramework(context: Context) {
         println("Bright stars count: ${starsList.count { it.brightness == Brightness.BRIGHT }}")
     }
 
+    /*
+     * Method for saving the stars list to shared preferences;
+     * This method is called from the addStarInterface() & resetStars() functions
+     */
     private fun saveStarsList(context: Context, starsList: List<StarModel>) {
         val sharedPreferences =
             context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
@@ -84,6 +94,10 @@ class StarMakerFramework(context: Context) {
         editor.apply()
     }
 
+    /*
+     * Method for getting the stars list from shared preferences;
+     * This method is called from the addStarInterface() function
+     */
     private fun getStarsList(context: Context): List<StarModel> {
         val sharedPreferences =
             context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
@@ -98,10 +112,12 @@ class StarMakerFramework(context: Context) {
         }
     }
 
+    /*
+     * Method for clearing the shared preferences;
+     * This method is called from the resetStars() function
+     */
     private fun clearSharedPreferences(context: Context) {
-        val sharedPreferences = context.getSharedPreferences("StarPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.clear() // Clear all data.
-        editor.apply() // Apply the changes asynchronously.
+        val settings = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        settings.edit().clear().apply()
     }
 }
